@@ -1,0 +1,95 @@
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using GrooveVinyles.DataAccess
+<form class="form-inline" method="post" asp-controller="Admin" asp-action="AddVinyl">
+    <div class="form-group  mx-sm-3 mb-2">
+        <label class="mx-sm-3" for="Name">Vinyle Name</label>
+        <input class="form-control" autocomplete="username" type="text" id="Name" name="Name" value="">
+        <label class="mx-sm-3" for="Name">Genre</label>
+        <input class="form-control" autocomplete="username" type="text" id="Genre" name="Genre" value="">
+        <label class="mx-sm-3" for="Name">Artist ID</label>
+        <input class="form-control" autocomplete="username" type="text" id="ArtistID" name="ArtistID" value="">
+        <label class="mx-sm-3" for="Name">Price</label>
+        <input class="form-control" style="width: 70px" autocomplete="username" type="text" id="Price" name="Price" value="">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2 ">Add</button>
+</form>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Genre</th>
+        <th scope="col">Artist</th>
+        <th scope="col">Artist ID</th>
+        <th scope="col">Stock</th>
+        <th scope="col">Price</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for (var i = 0; i < ViewBag.Vinyles.Count; i++)
+    {
+        <tr>
+            <form method="post" asp-controller="Admin">
+                <th scope="row">@(10 * (ViewBag.Page - 1) + (i + 1))</th>
+                <td>@(((Vinyl) ViewBag.Vinyles[i]).VinylId)</td>
+                <td>
+                    <input class="form-control-plaintext p-0" name="Name" value="@(((Vinyl) ViewBag.Vinyles[i]).VinylName)">
+                </td>
+                <td>
+                    <input class="form-control-plaintext p-0" name="Genre" value="@(((Vinyl) ViewBag.Vinyles[i]).Genre)">
+                </td>
+                
+                <td>@(((Vinyl) ViewBag.Vinyles[i]).Artist?.ArtistName ?? "N/A")</td>
+                <td>
+                    <input class="form-control-plaintext p-0" name="ArtistID" value="@(((Vinyl) ViewBag.Vinyles[i]).Artist?.ArtistId.ToString() ?? "N/A")">
+                </td>
+                <td>
+                    <input class="form-control-plaintext p-0" name="Stock" value="@(((Vinyl) ViewBag.Vinyles[i]).VinylStock)">
+                </td>
+                <td>
+                    <input class="form-control-plaintext p-0" name="Price" value="@(((Vinyl) ViewBag.Vinyles[i]).Price)">
+                </td>
+                <td class="w-25">
+                    <input class="d-none" readonly name="id" value="@(((Vinyl) ViewBag.Vinyles[i]).VinylId)">
+                    <button id="submit" asp-action="UpdateVinyl" type="submit" class="btn btn-primary">Update</button>
+                    <button id="submit" asp-action="DeleteVinyl" type="submit" class="btn btn-primary">Delete</button>
+                </td>
+            </form>
+        </tr>
+    }
+    </tbody>
+</table>
+<nav aria-label="Navigate through vinyles">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" style="user-select: none" href="@(ViewBag.Page == 1 ? null : "/Admin/ManageVinyles/" + (ViewBag.Page - 1))">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        @for (var i = 1; i <= ViewBag.MaxPages; i++)
+        {
+            @if (i == ViewBag.Page)
+            {
+                <li class="page-item active">
+                    <span class="page-link">
+                        @(i)
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@("/Admin/ManageVinyles/" + i)">@(i)</a>
+                </li>
+            }
+        }
+        <li class="page-item">
+            <a class="page-link" style="user-select: none" href="@(ViewBag.Page == ViewBag.MaxPages ? null : "/Admin/ManageVinyles/" + (ViewBag.Page + 1))">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

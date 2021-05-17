@@ -1,0 +1,32 @@
+﻿@using GrooveVinyles.DataAccess
+<br>
+
+<form method="post" asp-controller="Store">
+    <input class="d-none" readonly name="id" value="@ViewBag.Order.OrderId">
+    <button class="btn btn-outline-secondary mb-2" asp-action="ApproveOrder">Approve Order</button>
+    <button class="btn btn-outline-secondary mb-2" asp-action="DenyOrder">Deny Order</button>
+</form>
+
+
+<h5 class="card-title">Full Name: @ViewBag.Order.FullName</h5>
+<h5 class="card-title">Address: @ViewBag.Order.Address</h5>
+<h5 class="card-title">Items: </h5>
+<div class="card-columns">
+    @foreach (VinylPurchase purchase in ViewBag.Order.VinylPurchases)
+    {
+        <form method="post" asp-controller="Home">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">@(purchase.Vinyl.VinylName)</h5>
+                    <p class="card-text">
+                        <small class="text-muted">@(purchase.Vinyl.Genre)</small>
+                    </p>
+                    <input class="d-none" readonly name="id" value="@purchase.Vinyl.VinylId">
+                    <p class="card-text d-inline">Amount: </p>
+                    <p class="card-text d-inline-flex justify-content-center" style="min-width: 70px"> @(purchase.Amount) @(purchase.Amount != 1 ? "vinyles" : "vinyl") </p>
+                </div>
+            </div>
+        </form>
+    }
+
+</div>

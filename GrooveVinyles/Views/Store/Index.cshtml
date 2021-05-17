@@ -1,0 +1,77 @@
+﻿@using GrooveVinyles.DataAccess
+@{
+    ViewData["Title"] = "Store";
+    string[] pics =
+    {
+        "https://www.popstaronline.com/wp-content/uploads/2021/01/011321_thumbnail004.jpg",
+        "https://xosuey.com/wp-content/uploads/2021/02/imagine-dragons-thunder-youtube-thumbnail.jpg",
+        "https://s3.amazonaws.com/thumbnails.thecrimson.com/photos/2019/03/04/193915_1336226.jpg.1500x1125_q95_crop-smart_upscale.jpg",
+        "https://static.billboard.com/files/media/johnny-cash-bw-portrait-klm-billboard-1548-compressed.jpg",
+        "https://www.rollingstone.com/wp-content/uploads/2018/06/rs-13220-johnnycash-624-1383147488.jpg?resize=1800,1200&w=450",
+        "https://weraveyou.com/wp-content/uploads/2021/04/Alesso.jpg",
+        "https://i.ytimg.com/vi/LNYkAbd-chA/maxresdefault.jpg",
+        "https://i.ytimg.com/vi/dHtwZ07N1ic/maxresdefault.jpg",
+        "https://specials-images.forbesimg.com/imageserve/1170402477/960x0.jpg?fit=scale",
+        "https://i.ytimg.com/vi/5LzzVFQbHX4/maxresdefault.jpg"
+    };
+    var num = new Random().Next(pics.Length);
+    string GetPic()
+    {
+        num++;
+        if (num == pics.Length)
+            num = 0;
+        return pics[num];
+    }
+}
+<h1>@ViewData["Title"]</h1>
+<div class="card-columns">
+
+    @foreach (Artist artist in ViewBag.Artists)
+    {
+        <a href="@("/Store/Vinyles/"+artist.ArtistId)">
+            <div class="card text-center" style="width: 300px">
+                <img class="card-img-top" height="200px" src="@GetPic()" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@(artist.ArtistName)</h5>
+                    <p class="card-text">This artist has @(artist.Vinyles.Count) @(artist.Vinyles.Count != 1 ? "vinyles" : "vinyl")</p>
+                    <p class="card-text">
+                        <small class="text-muted">@(artist.Vinyles.Count > 0 ? artist.Vinyles.OrderBy(x => new Random().Next(1000)).First().VinylName : "No vinyls are available for this artist")</small>
+                    </p>
+                </div>
+            </div>
+        </a>
+    }
+
+</div>
+<nav aria-label="Navigate through artists">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" style="user-select: none" href="@(ViewBag.Page == 1 ? null : "/Store/" + (ViewBag.Page - 1))">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        @for (var i = 1; i <= ViewBag.MaxPages; i++)
+        {
+            @if (i == ViewBag.Page)
+            {
+                <li class="page-item active">
+                    <span class="page-link">
+                        @(i)
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@("/Store/" + i)">@(i)</a>
+                </li>
+            }
+        }
+        <li class="page-item">
+            <a class="page-link" style="user-select: none" href="@(ViewBag.Page == ViewBag.MaxPages ? null : "/Store/" + (ViewBag.Page + 1))">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

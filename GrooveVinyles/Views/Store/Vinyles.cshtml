@@ -1,0 +1,88 @@
+﻿@using GrooveVinyles.DataAccess
+@{
+    ViewData["Title"] = "Store";
+}
+@{
+    ViewData["Title"] = "Store";
+    string[] pics =
+    {
+        "https://static.sonovente.com/img/library/zoom/36/optim/36893_1.jpg",
+        "https://static.fnac-static.com/multimedia/Images/FR/NR/3f/b9/af/11516223/1540-1/tsp20191213150212/Christophe-Etc-Volume-2-Exclusivite-Fnac-Vinyle-orange.jpg",
+        "https://yt3.ggpht.com/ytc/AAUvwngQy2gJEJ9i4XqV_x8_r93xpSZmveYdjXEbJQye5Q=s900-c-k-c0x00ffffff-no-rj",
+        "https://www.vinylfactory.fr/wp-content/uploads/2020/11/platine-disque-1.jpg",
+        "https://lamanufacturedevinyles.com/wp-content/uploads/2017/12/Picture-disque-540x540.jpg",
+        "https://cdn.vegaooparty.com/images/rep_art/gra/232/9/232918/1-disque-vinyle-jaune_232918.jpg",
+        "https://www.stars-music.com/medias/serato/vinyl-control-tone-yellow-12-la-paire-hd-2-59285.png",
+        "https://media.istockphoto.com/photos/old-scratched-vinyl-record-picture-id935305468?k=6&m=935305468&s=612x612&w=0&h=XqE20idMkJdbe-Tty1YAu_tjPArVSZJZpw1Vte0sVcc=",
+        "https://rlv.zcache.fr/etiquette_noir_de_disque_de_musique_de_vinyle_avec-rcddde5090d384bd99f88d471d293d13d_0ugmp_8byvr_540.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/b/b4/12_Inch_Single_BBQ_Band.jpg",
+        "https://rlv.zcache.fr/papier_cadeau_soixantieme_retro_disque_vinyle_45_t_mn_wp_nomm-re7ba200758d440778139b0ab5afedd84_zkknt_8byvr_307.jpg?rvtype=content",
+        "https://rlv.zcache.fr/papier_cadeau_disque_vinyle-r2343e9545d7b4a80b979dd84c83c30f9_zkknt_8byvr_307.jpg?rvtype=content",
+        "https://lh3.googleusercontent.com/proxy/kMp5XWlVdwe_L2amkmj0IWD0-iwRwZX-6pHhfXgIy5hNHyuh7qpgmTDU0d6gkuIfmjSJ73Q2DNkdR8LavyB6oB7hkjaOQreYvB53DwV8xqurWMpI",
+    };
+    var num = new Random().Next(pics.Length);
+
+    string GetPic()
+    {
+        num++;
+        if (num == pics.Length)
+            num = 0;
+        return pics[num];
+    }
+}
+<h1>@ViewData["Title"] - @(ViewBag.ArtistName)</h1>
+<h4 style="color: red">@TempData["Error"]</h4>
+<div class="card-columns">
+
+    @foreach (Vinyl vinyl in ViewBag.Vinyles)
+    {
+        <form method="post" asp-controller="Store" asp-action="AddToCart">
+            <div class="card text-center">
+                <div class="card-body">
+                    <img class="card-img-top" src="@GetPic()" alt="Card image cap">
+                    <h5 class="card-title">@(vinyl.VinylName)</h5>
+                    <p class="card-text">Stock: @(vinyl.VinylStock) @(vinyl.VinylStock != 1 ? "vinyles" : "vinyl")</p>
+                    <p class="card-text">
+                        <small class="text-muted">@(vinyl.Genre)</small>
+                    </p>
+                    <p class="card-text">Price: $@(vinyl.Price)</p>
+                    <input class="d-none" readonly name="id" value="@vinyl.VinylId">
+                    <button class="form-control">Add to cart</button>
+                </div>
+            </div>
+        </form>
+    }
+
+</div>
+<nav aria-label="Navigate through artists">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" style="user-select: none" href="@(ViewBag.Page == 1 ? null : $"/Store/Vinyles/{ViewBag.ArtistID}/{ViewBag.Page - 1}")">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        @for (var i = 1; i <= ViewBag.MaxPages; i++)
+        {
+            @if (i == ViewBag.Page)
+            {
+                <li class="page-item active">
+                    <span class="page-link">
+                        @(i)
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@($"/Store/Vinyles/{ViewBag.ArtistID}/" + i)">@(i)</a>
+                </li>
+            }
+        }
+        <li class="page-item">
+            <a class="page-link" style="user-select: none" href="@(ViewBag.Page == ViewBag.MaxPages ? null : $"/Store/Vinyles/{ViewBag.ArtistID}/{ViewBag.Page + 1}")">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

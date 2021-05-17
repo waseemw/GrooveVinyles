@@ -1,0 +1,72 @@
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using GrooveVinyles.DataAccess
+<form class="form-inline" method="post" asp-controller="Admin" asp-action="AddArtist">
+    <div class="form-group  mx-sm-3 mb-2">
+        <label class="mx-sm-3" for="Name">Artist Name</label>
+        <input class="form-control" autocomplete="username" type="text" id="Name" name="Name" value="">
+    </div>
+    <button id="submit" type="submit" class="btn btn-primary mb-2 ">Add</button>
+</form>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Vinyles</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for (var i = 0; i < ViewBag.Artists.Count; i++)
+    {
+        <tr>
+            <form method="post" asp-controller="Admin">
+                <th scope="row">@(10 * (ViewBag.Page - 1) + (i + 1))</th>
+                <td>@(((Artist) ViewBag.Artists[i]).ArtistId)</td>
+                <td>
+                    <input class="form-control-plaintext p-0" name="Name" value="@(((Artist) ViewBag.Artists[i]).ArtistName)">
+                </td>
+                <td>@(((Artist) ViewBag.Artists[i]).Vinyles?.Count ?? 0)</td>
+                <td>
+                    <input class="d-none" readonly name="id" value="@(((Artist) ViewBag.Artists[i]).ArtistId)">
+                    <button id="submit" asp-action="UpdateArtist" type="submit" class="btn btn-primary">Update</button>
+                    <button id="submit" asp-action="DeleteArtist" type="submit" class="btn btn-primary">Delete</button>
+                </td>
+            </form>
+        </tr>
+    }
+    </tbody>
+</table>
+<nav aria-label="Navigate through artists">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" style="user-select: none" href="@(ViewBag.Page == 1 ? null : "/Admin/ManageArtists/" + (ViewBag.Page - 1))">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        @for (var i = 1; i <= ViewBag.MaxPages; i++)
+        {
+            @if (i == ViewBag.Page)
+            {
+                <li class="page-item active">
+                    <span class="page-link">
+                        @(i)
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@("/Admin/ManageArtists/" + i)">@(i)</a>
+                </li>
+            }
+        }
+        <li class="page-item">
+            <a class="page-link" style="user-select: none" href="@(ViewBag.Page == ViewBag.MaxPages ? null : "/Admin/ManageArtists/" + (ViewBag.Page + 1))">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

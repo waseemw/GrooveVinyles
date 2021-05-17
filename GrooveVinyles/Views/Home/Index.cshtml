@@ -1,8 +1,30 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Groove Vinyles Store</h1>
+    <p>Welcome to our humble Vinyles Store. You can find items to order on the store page</p>
+
+    @if (!ViewBag.AdminExists)
+    {
+        <h4 style="width: 500px; margin:  auto">No admin exists. Create an admin account!</h4>
+        <form class="col-md-4 m-auto" method="post" asp-controller="Home" asp-action="Index">
+            <hr>
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <input class="form-control" autocomplete="username" type="email" id="Email" name="Email" value="">
+            </div>
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <input class="form-control" autocomplete="new-password" type="password" data-val="true" id="Password" name="Password">
+            </div>
+            <button id="submit" type="submit" class="btn btn-primary">Create Admin</button>
+        </form>
+    }
+    
+    <form method="post" asp-controller="Home" asp-action="Test" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit">submit</button>
+    </form>
+    <img height="600px" src="https://cdn.shopify.com/s/files/1/2725/8216/products/Rare_White_Vinyl_1024x1024.png?v=1524280222">
 </div>
